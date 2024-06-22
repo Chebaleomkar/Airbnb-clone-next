@@ -7,9 +7,10 @@ import useRegisterModal from "@/hooks/useRegisterModal";
 import useLoginModal from "@/hooks/useLoginModal";
 import { User } from "@prisma/client";
 import { signOut } from "next-auth/react";
+import { safeUser } from "@/types";
 
 interface UserMenuProps {
-  currentUser?: User | null;
+  currentUser?: safeUser | null;
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
@@ -40,7 +41,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
         </div>
 
         <div className="hidden md:block">
-          <Avatar />
+          <Avatar img={currentUser?.image} />
         </div>
       </div>
 
@@ -50,20 +51,16 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
             {currentUser ? (
               <>
                 <MenuItem onClick={() => {}} label="My trips" />
-
                 <MenuItem onClick={() => {}} label="My favorites" />
-
                 <MenuItem onClick={() => {}} label="My reservations" />
                 <MenuItem onClick={() => {}} label="My properties" />
                 <MenuItem onClick={() => {}} label="Airbnb my home" />
                 <hr />
                 <MenuItem onClick={() => signOut()} label="Logout" />
-
               </>
             ) : (
               <>
                 <MenuItem onClick={loginModal.onOpen} label="Login" />
-
                 <MenuItem onClick={registerModal.onOpen} label="Sign up" />
               </>
             )}

@@ -6,9 +6,10 @@ import Logo from "./Logo"
 import Search from "./Search"
 import UserMenu from "./UserMenu"
 import React from "react"
+import { safeUser } from "@/types"
 
 
-const Navbar = ( {currentUser} : {currentUser?:User }) => {
+const Navbar = ( {currentUser} : {currentUser?:safeUser }) => {
   
 
   return (
