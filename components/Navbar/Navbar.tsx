@@ -7,6 +7,7 @@ import Search from "./Search"
 import UserMenu from "./UserMenu"
 import React from "react"
 import { safeUser } from "@/types"
+import Categories from "./Categories"
 
 
 const Navbar = ( {currentUser} : {currentUser?:safeUser }) => {
@@ -23,6 +24,7 @@ const Navbar = ( {currentUser} : {currentUser?:safeUser }) => {
                 </div>
             </Container>
         </div>
+        <Categories />
     </div>
   )
 }
