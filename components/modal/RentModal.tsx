@@ -6,7 +6,10 @@ import useRentModal from "@/hooks/useRentModal";
 import Heading from "../Heading";
 import { categories } from "../Navbar/Categories";
 import CategoryInput from "../inputs/CategoryInput";
-import { FieldValue, FieldValues, useForm } from "react-hook-form";
+import {  FieldValues, useForm } from "react-hook-form";
+import CountrySelect from "../inputs/CountrySelect";
+import dynamic from "next/dynamic";
+
 
 enum STEPS {
  CATEGORY = 0,
@@ -19,61 +22,72 @@ enum STEPS {
 
 const RentModal = () => {
   const rentModal = useRentModal();
-  const [step , setStep] = useState(STEPS.CATEGORY);
+  const [step, setStep] = useState(STEPS.CATEGORY);
 
-  const {regiser , handleSubmit , setValue , watch , 
-    formState : {
-      errors,
-    },reset
+  const {
+    regiser,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+    reset,
   } = useForm<FieldValues>({
-    defaultValues : {
-      category : '',
-      location : null,
-      guestCount : 1,
-      roomCount :1,
-      bathroomCount :1,
-      imageSrc : '',
-      price  : 1,
-      title : '',
-      description  : ''
-    }
+    defaultValues: {
+      category: "",
+      location: null,
+      guestCount: 1,
+      roomCount: 1,
+      bathroomCount: 1,
+      imageSrc: "",
+      price: 1,
+      title: "",
+      description: "",
+    },
   });
 
-  const category = watch('category');
+  const category = watch("category");
+  const location = watch("location");
 
-  const setCustomValue = (id:string , value:any) =>{
-    setValue(id , value , {
-      shouldValidate : true,
-      shouldDirty : true,
-      shouldTouch : true
+  //   # Import Map component as dynamic
+  const Maps = useMemo(
+    () =>
+      dynamic(() => import("../Maps"), {
+        ssr: false,
+      }),
+    [location]
+  );
+
+  const setCustomValue = (id: string, value: any) => {
+    setValue(id, value, {
+      shouldValidate: true,
+      shouldDirty: true,
+      shouldTouch: true,
     });
+  };
 
-  }
+  const onBack = () => {
+    setStep((val) => val - 1);
+  };
 
-  const onBack = () =>{
-    setStep((val) => val -1);
-  }
+  const onNext = () => {
+    setStep((val) => val + 1);
+  };
 
-  const onNext = () =>{
-    setStep((val)=> val+1);
-  }
-
-  const actionLabel = useMemo(()=>{
-    if(step === STEPS.PRICE){
-      return 'Create'
+  const actionLabel = useMemo(() => {
+    if (step === STEPS.PRICE) {
+      return "Create";
     }
-    return 'Next'
-  },[step]);
+    return "Next";
+  }, [step]);
 
-  const secondaryActionLabel = useMemo(()=>{
-    if(step === STEPS.CATEGORY){
-      return undefined
+  const secondaryActionLabel = useMemo(() => {
+    if (step === STEPS.CATEGORY) {
+      return undefined;
     }
-    return 'Back'
-  },[step]);
+    return "Back";
+  }, [step]);
 
-
-  const bodyContent = (
+  let bodyContent = (
     <div className="flex flex-col gap-8">
       <Heading
         title="Which of these best describe your place ?"
@@ -95,6 +109,23 @@ const RentModal = () => {
     </div>
   );
 
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="where is your place located?"
+          subtitle="Help guests find you!"
+        />
+        <CountrySelect
+          onChange={(value) => setCustomValue("location", value)}
+          value={location}
+        />
+
+        <Maps center={location?.latlng} />
+      </div>
+    );
+  }
+
   return (
     <>
       <Modal
@@ -105,7 +136,7 @@ const RentModal = () => {
         secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
         body={bodyContent}
         onClose={rentModal.onClose}
-        onSubmit={rentModal.onClose}
+        onSubmit={onNext}
       />
     </>
   );
