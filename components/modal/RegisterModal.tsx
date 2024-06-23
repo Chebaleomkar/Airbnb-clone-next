@@ -13,9 +13,12 @@ import Input from "../inputs/Input";
 import toast from "react-hot-toast";
 import Button from "../Button";
 import { signIn } from "next-auth/react";
+import useLoginModal from "@/hooks/useLoginModal";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
+  const loginModal = useLoginModal();
+
   const [isLoading, setLoading] = useState(false);
 
   const {
@@ -46,6 +49,7 @@ const RegisterModal = () => {
       });
   };
 
+  
   const bodyContent = (
     <div className="flex flex-col gap-4">
       <Heading title="Welcome to Airbnb" subtitle="Create an account" />
@@ -56,7 +60,7 @@ const RegisterModal = () => {
         register={register}
         errors={error}
         required
-      />
+        />
       <Input
         id="name"
         label="Name"
@@ -64,7 +68,7 @@ const RegisterModal = () => {
         register={register}
         errors={error}
         required
-      />
+        />
       <Input
         id="password"
         label="Password"
@@ -73,9 +77,15 @@ const RegisterModal = () => {
         register={register}
         errors={error}
         required
-      />
+        />
     </div>
   );
+  
+  const toggle = useCallback(()=>{
+    registerModal.onClose();
+     loginModal.onOpen();
+ 
+   },[loginModal , registerModal]);
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
@@ -85,7 +95,7 @@ const RegisterModal = () => {
         label="Continue with Google"
         icon={FcGoogle}
         onClick={() =>signIn('google')}
-      />
+        />
       <Button
         outline
         label="Continue with Github"
@@ -96,7 +106,7 @@ const RegisterModal = () => {
         <div className="flex flex-col items-center justify-center gap-2 ">
           <p>
             Already have an account?
-            <span onClick={registerModal.onClose} className="text-neutral-800 cursor-pointer hover:underline  ">
+            <span onClick={toggle} className="text-neutral-800 cursor-pointer hover:underline font-semibold  ">
               Log in
             </span>
           </p>

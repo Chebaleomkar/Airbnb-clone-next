@@ -17,8 +17,10 @@ import useLoginModal from "@/hooks/useLoginModal";
 import { useRouter } from "next/navigation";
 
 const RegisterModal = () => {
+
   const registerModal = useLoginModal();
   const loginModal = useLoginModal();
+
   const router = useRouter();
   const [isLoading, setLoading] = useState(false);
 
@@ -75,6 +77,12 @@ const RegisterModal = () => {
     </div>
   );
 
+  const toggle = useCallback(()=>{
+    loginModal.onClose();
+    registerModal.onOpen();
+
+  },[loginModal , registerModal]);
+
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
       <hr />
@@ -93,10 +101,10 @@ const RegisterModal = () => {
       <div className="text-neutral-500 text-center  mt-4 font-light ">
         <div className="flex flex-col items-center justify-center gap-2 ">
           <p>
-            Already have an account?
-            <span onClick={registerModal.onClose} className="text-neutral-800 cursor-pointer hover:underline  ">
-              Log in
-            </span>
+            First time using Airbnb ?
+            <span onClick={toggle} className="text-neutral-800 cursor-pointer hover:underline  font-semibold ">
+               Create an account
+              </span>
           </p>
         </div>
       </div>

@@ -14,4 +14,4 @@ const MenuItem: React.FC<menuItemProps> = ({ onClick , label}) => {
   )
 }
 
-export default MenuItem
+export default MenuItem;
