@@ -25,7 +25,7 @@ const RegisterModal = () => {
   const {
     register,
     handleSubmit,
-    formState: { error },
+    formState: { error  },
   } = useForm<FieldValues>({
     defaultValues: {
       email: "",
